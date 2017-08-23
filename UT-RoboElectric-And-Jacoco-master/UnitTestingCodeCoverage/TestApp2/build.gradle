@@ -1,0 +1,81 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.1.2'
+        classpath 'org.jacoco:org.jacoco.core:0.7.5.+'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+    }
+    def coverageSourceDirs = [
+            'src/main/java'
+    ]
+
+    task jacocoTestReportDebug(type:JacocoReport) {
+        group = "Reporting"
+
+        description = "Generate Jacoco coverage reports for Debug"
+
+        classDirectories = fileTree(
+                dir: 'build/intermediates/classes/debug',
+                excludes: ['**/R.class',
+                           '**/R$*.class',
+                           '**/*$ViewInjector*.*',
+                           '**/BuildConfig.*',
+                           '**/Manifest*.*']
+        )
+
+        additionalSourceDirs = files(coverageSourceDirs)
+        sourceDirectories = files(coverageSourceDirs)
+        executionData = files('build/jacoco/testDebugUnitTest.exec')
+
+        reports {
+            xml.enabled = false
+            html.enabled = true
+        }
+    }
+
+    task jacocoTestReportRelease(type:JacocoReport) {
+        group = "Reporting"
+
+        description = "Generate Jacoco coverage reports for Release"
+
+        classDirectories = fileTree(
+                dir: 'build/intermediates/classes/release',
+                excludes: ['**/R.class',
+                           '**/R$*.class',
+                           '**/*$ViewInjector*.*',
+                           '**/BuildConfig.*',
+                           '**/Manifest*.*']
+        )
+
+        additionalSourceDirs = files(coverageSourceDirs)
+        sourceDirectories = files(coverageSourceDirs)
+        executionData = files('build/jacoco/testReleaseUnitTest.exec')
+
+        reports {
+            xml.enabled = false
+            html.enabled = true
+        }
+
+    }
+
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+ext {
+    robolectricVersion = "3.1"
+}

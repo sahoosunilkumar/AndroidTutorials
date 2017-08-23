@@ -1,0 +1,2 @@
+include ':app',':testapp3'
+project (':testapp3').projectDir=new File('../TestApp3/apptest3')
